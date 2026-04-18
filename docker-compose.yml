@@ -1,0 +1,34 @@
+# ============================================================
+# LinkedIn Authority Mentor — Docker Compose
+# ============================================================
+# Usage:
+#   docker-compose up -d          → Start with scheduler
+#   docker-compose run mentor --run-now  → Run once
+#   docker-compose run mentor --verify   → Verify config
+# ============================================================
+
+services:
+  mentor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linkedin-authority-mentor
+    env_file: .env
+    restart: unless-stopped
+    
+    # Resource limits (keep it lightweight)
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+    
+    # Logging
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

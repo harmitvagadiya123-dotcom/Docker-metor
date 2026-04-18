@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: linkedin-authority-mentor
+    env: docker
+    plan: free
+    region: singapore # Closest to India (IST)
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false # User must set this in dashboard
+      - key: LINKEDIN_ACCESS_TOKEN
+        sync: false
+      - key: LINKEDIN_PERSON_URN
+        sync: false
+      - key: GOOGLE_SHEETS_CREDENTIALS_B64
+        sync: false
+      - key: GOOGLE_SHEET_ID
+        value: "1D9YE8qZ43YjkfEfOOV-aXx_OO-sptKdrNXDXaXkl8AM"
+      - key: GOOGLE_SHEET_NAME
+        value: "Linkedin Authority-Metor"
+      - key: SCHEDULE_DAYS
+        value: "mon,wed,fri"
+      - key: SCHEDULE_HOUR
+        value: "18"
+      - key: SCHEDULE_MINUTE
+        value: "0"
+      - key: SCHEDULE_TIMEZONE
+        value: "Asia/Kolkata"
+      - key: LOG_LEVEL
+        value: "INFO"
+      - key: PORT
+        value: "10000"
