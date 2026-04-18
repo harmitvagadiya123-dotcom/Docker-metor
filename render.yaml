@@ -33,6 +33,6 @@ services:
       - key: LOG_LEVEL
         value: "INFO"
       - key: EXECUTE_NOW
-        value: "true" # Hardcoded to force an immediate run on Render
+        sync: false # Set to "true" in Render dashboard to trigger a manual run
       - key: PORT
         value: "10000"
