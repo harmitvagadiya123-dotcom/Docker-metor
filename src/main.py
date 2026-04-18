@@ -184,16 +184,26 @@ Examples:
 
     args = parser.parse_args()
 
+    # Setup logging
+    # Use basic logging for startup before settings are loaded
+    setup_logging("INFO")
+
+    # Start health check server IMMEDIATELY so Render marks the app as "Live"
+    # Even if settings fail, the app stays running so the user can read the logs!
+    port = int(os.environ.get("PORT", 10000))
+    start_health_server(port)
+
     # Load settings
     try:
         settings = get_settings()
     except Exception as e:
-        print(f"❌ Failed to load settings: {e}")
-        print("   Make sure .env file exists or environment variables are set.")
-        print("   Copy .env.example to .env and fill in your values.")
-        sys.exit(1)
+        logger.error(f"❌ Failed to load settings: {e}")
+        logger.error("   Please check your Render Environment Variables Dashboard!")
+        logger.error("   The app will stay alive so you can read this error, but no jobs will run.")
+        while True:
+            time.sleep(60) # Keep container alive
 
-    # Setup logging
+    # Update logging level based on settings
     setup_logging(settings.log_level)
 
     logger.info("=" * 60)
@@ -229,14 +239,9 @@ Examples:
         
         if args.run_now:
             logger.info("\n[RUN] Running pipeline immediately (--run-now mode)...")
-        
         run_job(settings)
         logger.info("Done. Exiting.")
         sys.exit(0)
-
-    # Start health check server (Required for Render Web Services)
-    # Start it early so Render's health checks pass while we do other tasks
-    start_health_server(settings.port)
 
     # Scheduler mode (default)
     logger.info("\n📅 Starting scheduler...")
