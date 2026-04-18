@@ -69,6 +69,12 @@ class Settings(BaseSettings):
     # --- Server (for Health Checks) ---
     port: int = Field(default=10000, description="Port for the health check server")
 
+    # --- Manual Trigger ---
+    execute_now: bool = Field(
+        default=False,
+        description="If true, executes the pipeline immediately on startup before entering scheduler mode",
+    )
+
     # --- Default Content Inputs ---
     default_story_input: str = Field(
         default=(

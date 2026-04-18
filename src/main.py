@@ -237,6 +237,12 @@ Examples:
     # Scheduler mode (default)
     logger.info("\n📅 Starting scheduler...")
 
+    # [MANUAL TRIGGER] Check if we should run once before starting the scheduler
+    if settings.execute_now:
+        logger.info("\n[TRIGGER] EXECUTE_NOW is True. Running pipeline once before scheduling...")
+        run_job(settings)
+        logger.info("[TRIGGER] Manual run completed. Entering scheduler mode...\n")
+
     # Build cron trigger from settings
     days_map = {
         "mon": "0", "tue": "1", "wed": "2", "thu": "3",
