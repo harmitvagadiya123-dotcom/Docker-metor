@@ -71,12 +71,12 @@ class BaseAgent:
 
         self.client = OpenAI(api_key=api_key)
 
-        logger.info(f"🤖 Agent initialized: {self.name} ({self.role})")
+        logger.info(f"[*] Agent initialized: {self.name} ({self.role})")
 
     def register_tool(self, tool: AgentTool) -> None:
         """Register a tool that this agent can call."""
         self.tools[tool.name] = tool
-        logger.info(f"  🔧 Tool registered: {tool.name}")
+        logger.info(f"  [*] Tool registered: {tool.name}")
 
     def run(self, user_message: str) -> str:
         """
@@ -85,9 +85,7 @@ class BaseAgent:
         
         Returns the final text response from the agent.
         """
-        logger.info(f"\n{'='*60}")
-        logger.info(f"▶ Agent [{self.name}] starting execution")
-        logger.info(f"  Input length: {len(user_message)} chars")
+        logger.info(f"[START] Agent [{self.name}] starting execution")
 
         messages = [
             {"role": "system", "content": self.system_prompt},
@@ -102,7 +100,7 @@ class BaseAgent:
         )
 
         for round_num in range(self.max_tool_rounds):
-            logger.info(f"  📡 Round {round_num + 1}: Calling {self.model}...")
+            logger.info(f"  [*] Round {round_num + 1}: Calling {self.model}...")
 
             response = self.client.chat.completions.create(
                 model=self.model,
@@ -117,7 +115,7 @@ class BaseAgent:
             # If no tool calls, we have our final answer
             if not message.tool_calls:
                 result = message.content or ""
-                logger.info(f"  ✅ Agent [{self.name}] completed")
+                logger.info(f"  [OK] Agent [{self.name}] completed")
                 logger.info(f"  Output length: {len(result)} chars")
                 logger.info(
                     f"  Tokens used: {response.usage.total_tokens if response.usage else 'N/A'}"
@@ -131,7 +129,7 @@ class BaseAgent:
                 func_name = tool_call.function.name
                 func_args = json.loads(tool_call.function.arguments)
 
-                logger.info(f"  🔧 Tool call: {func_name}({json.dumps(func_args, indent=2)[:200]})")
+                logger.info(f"  [*] Tool call: {func_name}({json.dumps(func_args, indent=2)[:200]})")
 
                 if func_name in self.tools:
                     try:
@@ -141,13 +139,13 @@ class BaseAgent:
                             if not isinstance(tool_result, str)
                             else tool_result
                         )
-                        logger.info(f"  📦 Tool result: {result_str[:200]}...")
+                        logger.info(f"  [DATA] Tool result: {result_str[:200]}...")
                     except Exception as e:
                         result_str = f"Error calling {func_name}: {str(e)}"
-                        logger.error(f"  ❌ Tool error: {result_str}")
+                        logger.error(f"  [ERROR] Tool error: {result_str}")
                 else:
                     result_str = f"Unknown tool: {func_name}"
-                    logger.warning(f"  ⚠️ {result_str}")
+                    logger.warning(f"  [WARN] {result_str}")
 
                 messages.append(
                     {
@@ -159,6 +157,6 @@ class BaseAgent:
 
         # If we exhausted all rounds, return the last message
         logger.warning(
-            f"  ⚠️ Agent [{self.name}] hit max tool rounds ({self.max_tool_rounds})"
+            f"  [WARN] Agent [{self.name}] hit max tool rounds ({self.max_tool_rounds})"
         )
         return message.content or "Agent could not complete the task within the allowed rounds."
