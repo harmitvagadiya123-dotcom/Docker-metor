@@ -17,9 +17,11 @@ services:
       - key: GOOGLE_SHEETS_CREDENTIALS_B64
         sync: false
       - key: GOOGLE_SHEET_ID
-        value: "1D9YE8qZ43YjkfEfOOV-aXx_OO-sptKdrNXDXaXkl8AM"
+        value: "1KbMDOnQuvRXQGCSIO1V0TBRUAprGtktN441Z_ktDUmk"
       - key: GOOGLE_SHEET_NAME
-        value: "Linkedin Authority-Metor"
+        value: "Sheet1"
+      - key: OPENAI_MODEL
+        value: "gpt-4o-mini"
       - key: SCHEDULE_DAYS
         value: "mon,wed,fri"
       - key: SCHEDULE_HOUR
@@ -30,5 +32,7 @@ services:
         value: "Asia/Kolkata"
       - key: LOG_LEVEL
         value: "INFO"
+      - key: EXECUTE_NOW
+        value: "false" # Set to "true" in Render dashboard to trigger a manual run
       - key: PORT
         value: "10000"

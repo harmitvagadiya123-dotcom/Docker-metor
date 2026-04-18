@@ -234,6 +234,10 @@ Examples:
         logger.info("Done. Exiting.")
         sys.exit(0)
 
+    # Start health check server (Required for Render Web Services)
+    # Start it early so Render's health checks pass while we do other tasks
+    start_health_server(settings.port)
+
     # Scheduler mode (default)
     logger.info("\n📅 Starting scheduler...")
 
@@ -277,9 +281,6 @@ Examples:
 
     signal.signal(signal.SIGTERM, shutdown_handler)
     signal.signal(signal.SIGINT, shutdown_handler)
-
-    # Start health check server (Required for Render Free Tier)
-    start_health_server(settings.port)
 
     logger.info(
         f"✅ Scheduler started. Next run: "

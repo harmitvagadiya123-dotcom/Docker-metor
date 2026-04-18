@@ -25,11 +25,11 @@ class Settings(BaseSettings):
         default="", description="Base64-encoded Google service account JSON key (optional in dry-run mode)"
     )
     google_sheet_id: str = Field(
-        default="1D9YE8qZ43YjkfEfOOV-aXx_OO-sptKdrNXDXaXkl8AM",
+        default="1KbMDOnQuvRXQGCSIO1V0TBRUAprGtktN441Z_ktDUmk",
         description="Google Sheet document ID",
     )
     google_sheet_name: str = Field(
-        default="Linkedin Authority-Metor",
+        default="Sheet1",
         description="Name of the worksheet/tab",
     )
 
