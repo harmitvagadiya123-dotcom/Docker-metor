@@ -247,13 +247,14 @@ Examples:
     # Scheduler mode (default)
     logger.info("\n📅 Starting scheduler...")
 
-    # [MANUAL TRIGGER] Forcing run for this deployment to ensure LinkedIn posting works
-    logger.info("\n[TRIGGER] Forcing pipeline to run once on deploy (bypassing dashboard toggle)...")
-    try:
-        run_job(settings)
-        logger.info("[TRIGGER] Manual run completed. Entering scheduler mode...\n")
-    except Exception as e:
-        logger.error(f"[ERROR] Pipeline crashed on startup: {e}")
+    # [MANUAL TRIGGER] Check if we should run once before starting the scheduler
+    if settings.execute_now:
+        logger.info("\n[TRIGGER] EXECUTE_NOW is True. Running pipeline once before scheduling...")
+        try:
+            run_job(settings)
+            logger.info("[TRIGGER] Manual run completed. Entering scheduler mode...\n")
+        except Exception as e:
+            logger.error(f"[ERROR] Pipeline crashed on startup: {e}")
 
     # Build cron trigger from settings
     days_map = {
